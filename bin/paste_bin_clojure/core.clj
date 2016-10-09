@@ -2,19 +2,14 @@
   (:require [ring.middleware.params :as params]
             [ring.util.response :as resp]
             [ring.adapter.jetty :as jetty]
-            [debux.core :as dbg]
-            [paste-bin-clojure.database :as db]))
+            [debux.core :as dbg]))
 
 (defn insert-note-database [note]
-  (let [uid (str (java.util.UUID/randomUUID))]
-    (db/insert-note (-> note
-                        (assoc :note_uid uid)))
-    uid))
+  (dbg/dbg "The note is inserted"))
 
 (defn insert-note [{:keys [query-params]}]
-  
-  (resp/response (str "Your note has been inserted. Thanks. "
-                       (insert-note-database query-params))))
+  (insert-note-database query-params)
+  (resp/response "Your note has been inserted. Thanks. "))
 
 (defn handler [{:keys [uri], :as request}]
   (dbg/dbg request)
